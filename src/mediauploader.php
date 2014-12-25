@@ -90,7 +90,6 @@ class WhatsMediaUploader
 
         return self::sendData($host, $POST, $hBAOS, $filepath, $mediafile, $fBAOS);
     }
-
 }
 
 ?>

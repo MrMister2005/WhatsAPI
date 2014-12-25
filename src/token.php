@@ -48,3 +48,14 @@ function getBuildHash()
     );
     return $result;
 }
+
+class WaBuildHash {
+    public $UserAgent;
+    public $Token;
+
+    public function __construct($userAgent, $token)
+    {
+        $this->UserAgent = $userAgent;
+        $this->Token = $token;
+    }
+}
