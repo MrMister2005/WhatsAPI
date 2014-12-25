@@ -76,6 +76,10 @@ class WhatsProt
     protected $serverReceivedId;        // Confirm that the *server* has received your command.
     protected $socket;                  // A socket to connect to the WhatsApp network.
     protected $writer;                  // An instance of the BinaryTreeNodeWriter class.
+    /** @var WaBuildHash */
+    protected $buildHash;
+    /** @var WhatsMediaUploader */
+    protected $mediaUploader;
 
     /**
      * Default class constructor.
@@ -105,6 +109,8 @@ class WhatsProt
         }
         $this->name = $nickname;
         $this->loginStatus = static::DISCONNECTED_STATUS;
+        $this->buildHash = getBuildHash();
+        $this->mediaUploader = new WhatsMediaUploader();
     }
 
     /**
@@ -2516,7 +2522,7 @@ class WhatsProt
             $filename = array_pop($exploded);
         } else {
             //upload new file
-            $json = WhatsMediaUploader::pushFile($node, $messageNode, $this->mediaFileInfo, $this->phoneNumber);
+            $json = $this->mediaUploader->pushFile($node, $messageNode, $this->mediaFileInfo, $this->phoneNumber, $this->buildHash->UserAgent);
 
             if (!$json) {
                 //failed upload

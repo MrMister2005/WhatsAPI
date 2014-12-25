@@ -5,7 +5,7 @@
  */
 class WhatsMediaUploader
 {
-    protected static function sendData($host, $POST, $HEAD, $filepath, $mediafile, $TAIL)
+    protected function sendData($host, $POST, $HEAD, $filepath, $mediafile, $TAIL)
     {
         $sock = fsockopen("ssl://" . $host, 443);
 
@@ -43,16 +43,16 @@ class WhatsMediaUploader
         return false;
     }
 
-    public static function pushFile($uploadResponseNode, $messageContainer, $mediafile, $selfJID)
+    public function pushFile($uploadResponseNode, $messageContainer, $mediafile, $selfJID, $userAgent)
     {
         //get vars
         $url = $uploadResponseNode->getChild("media")->getAttribute("url");
         $filepath = $messageContainer["filePath"];
         $to = $messageContainer["to"];
-        return self::getPostString($filepath, $url, $mediafile, $to, $selfJID);
+        return $this->getPostString($filepath, $url, $mediafile, $to, $selfJID, $userAgent);
     }
 
-    protected static function getPostString($filepath, $url, $mediafile, $to, $from)
+    protected function getPostString($filepath, $url, $mediafile, $to, $from, $userAgent)
     {
         $host = parse_url($url, PHP_URL_HOST);
 
@@ -84,11 +84,10 @@ class WhatsMediaUploader
         $POST = "POST " . $url . "\r\n";
         $POST .= "Content-Type: multipart/form-data; boundary=" . $boundary . "\r\n";
         $POST .= "Host: " . $host . "\r\n";
-        $hashData = getBuildHash();
-        $POST .= "User-Agent: " . $hashData->UserAgent . "\r\n";
+        $POST .= "User-Agent: " . $userAgent . "\r\n";
         $POST .= "Content-Length: " . $contentlength . "\r\n\r\n";
 
-        return self::sendData($host, $POST, $hBAOS, $filepath, $mediafile, $fBAOS);
+        return $this->sendData($host, $POST, $hBAOS, $filepath, $mediafile, $fBAOS);
     }
 }
 
