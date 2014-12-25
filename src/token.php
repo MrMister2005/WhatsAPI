@@ -7,7 +7,7 @@ function generateRequestToken($country, $phone) {
     $hashData = getBuildHash();
 
     $key2 = base64_decode("/UIGKU1FVQa+ATM2A0za7G2KI9S/CwPYjgAbc67v7ep42eO/WeTLx1lb1cHwxpsEgF4+PmYpLd2YpGUdX/A2JQitsHzDwgcdBpUf7psX1BU=");
-	$data = base64_decode($signature) . base64_decode($hashData['buildhash']) . $phone;
+	$data = base64_decode($signature) . base64_decode($hashData->Token) . $phone;
 
 	$opad = str_repeat(chr(0x5C), 64);
 	$ipad = str_repeat(chr(0x36), 64);
@@ -25,6 +25,10 @@ function generateRequestToken($country, $phone) {
     return $result;
 }
 
+/**
+ * @return WaBuildHash
+ * @throws Exception
+ */
 function getBuildHash()
 {
     $dat = file_get_contents(dirname(__FILE__) . "/build.hash");
@@ -42,10 +46,7 @@ function getBuildHash()
     {
         throw new Exception('Invalid build hash');
     }
-    $result = array(
-        'useragent' => $dat[0],
-        'buildhash' => $dat[1]
-    );
+    $result = new WaBuildHash($dat[0], $dat[1]);
     return $result;
 }
 

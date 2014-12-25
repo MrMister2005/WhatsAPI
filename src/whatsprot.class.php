@@ -1479,7 +1479,7 @@ class WhatsProt
             //$this->writer->setKey($this->outputKey);
             $phone = $this->dissectPhone();
             $hashData = getBuildHash();
-            $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData . time() . $hashData['useragent'] . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . "001";
+            $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData . time() . $hashData->UserAgent . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . "001";
             $this->challengeData = null;
             return $this->outputKey->EncodeMessage($array, 0, strlen($array), false);
         }
@@ -1829,7 +1829,7 @@ class WhatsProt
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_USERAGENT, $hashData['useragent']);
+        curl_setopt($ch, CURLOPT_USERAGENT, $hashData->UserAgent);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: text/json'));
         // This makes CURL accept any peer!
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

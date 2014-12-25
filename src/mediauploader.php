@@ -85,7 +85,7 @@ class WhatsMediaUploader
         $POST .= "Content-Type: multipart/form-data; boundary=" . $boundary . "\r\n";
         $POST .= "Host: " . $host . "\r\n";
         $hashData = getBuildHash();
-        $POST .= "User-Agent: " . $hashData['useragent'] . "\r\n";
+        $POST .= "User-Agent: " . $hashData->UserAgent . "\r\n";
         $POST .= "Content-Length: " . $contentlength . "\r\n\r\n";
 
         return self::sendData($host, $POST, $hBAOS, $filepath, $mediafile, $fBAOS);
