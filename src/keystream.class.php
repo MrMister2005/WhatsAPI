@@ -10,7 +10,7 @@ require_once("rc4.php");
 require_once("func.php");
 
 class KeyStream {
-    public static $AuthMethod = "WAUTH-2";
+    const AUTH_METHOD = "WAUTH-2";
     const DROP = 768;
     private $rc4;
     private $seq;
@@ -22,7 +22,7 @@ class KeyStream {
         $this->macKey = $macKey;
     }
 
-    public static function GenerateKeys($password, $nonce)
+    public function GenerateKeys($password, $nonce)
     {
         $array = array(
             "key",//placeholders

@@ -14,12 +14,10 @@ class WhatsAppEvent
 {
    /**
      * Contains all of our event listeners.
-     * 
-    * Note: This shouldn't be static, and may change in future implementations.
-    * 
+     *
      * @var WhatsAppEventListener
      */
-    static $event_listeners = array();
+    protected $event_listeners = array();
     
     /**
      * Constructor.
@@ -40,7 +38,7 @@ class WhatsAppEvent
      */
     function addEventListener(WhatsAppEventListener $event_listener)
     {
-        array_push(self::$event_listeners, $event_listener);
+        array_push($this->event_listeners, $event_listener);
     }   
     
     /**
@@ -85,7 +83,7 @@ class WhatsAppEvent
     public function fire($event, $arguments = array())
     {
         // For backwards compatibility only.
-        foreach( self::$event_listeners as $event_listener ) {
+        foreach( $this->event_listeners as $event_listener ) {
             call_user_func_array(array($event_listener, $event), $arguments);
         }
     }
@@ -96,7 +94,7 @@ class WhatsAppEvent
      * @param function $callbackEvent
      */
     private function fireCallback($callbackEvent) {
-        array_map($callbackEvent, self::$event_listeners);
+        array_map($callbackEvent, $this->event_listeners);
    }
     
     // The supported events:

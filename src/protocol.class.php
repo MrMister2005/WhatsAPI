@@ -29,27 +29,18 @@ class ProtocolNode
     private $attributeHash;
     private $children;
     private $data;
-    private static $cli = null;
+    private $cli = null;
 
-    /**
-     * check if call is from command line
-     * @return bool
-     */
-    private static function isCli()
+    private function checkCli()
     {
-        if(self::$cli === null)
+        if(php_sapi_name() == "cli")
         {
-            //initial setter
-            if(php_sapi_name() == "cli")
-            {
-                self::$cli = true;
-            }
-            else
-            {
-                self::$cli = false;
-            }
+            $this->cli = true;
         }
-        return self::$cli;
+        else
+        {
+            $this->cli = false;
+        }
     }
 
     /**
@@ -90,6 +81,7 @@ class ProtocolNode
         $this->attributeHash = $attributeHash;
         $this->children = $children;
         $this->data = $data;
+        $this->checkCli();
     }
 
     /**
@@ -103,7 +95,7 @@ class ProtocolNode
         $lt = "<";
         $gt = ">";
         $nl = "\n";
-        if(!self::isCli())
+        if(!$this->isCli)
         {
             $lt = "&lt;";
             $gt = "&gt;";
@@ -141,7 +133,7 @@ class ProtocolNode
         if(!$isChild)
         {
             $ret .= $nl;
-            if(!self::isCli())
+            if(!$this->isCli)
             {
                 $ret .= $nl;
             }

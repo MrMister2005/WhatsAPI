@@ -305,7 +305,7 @@ class WhatsProt
         }
 
         // Build the token.
-        $tokenData = generateRequestToken($phone['country'], $phone['phone']);
+        $tokenData = generateRequestToken($phone['country'], $phone['phone'], $this->buildHash);
 
         // Build the url.
         $host = 'https://' . static::WHATSAPP_REQUEST_HOST;
@@ -1484,8 +1484,7 @@ class WhatsProt
             $this->reader->setKey($this->inputKey);
             //$this->writer->setKey($this->outputKey);
             $phone = $this->dissectPhone();
-            $hashData = getBuildHash();
-            $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData . time() . $hashData->UserAgent . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . "001";
+            $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData . time() . $this->buildHash->UserAgent . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . "001";
             $this->challengeData = null;
             return $this->outputKey->EncodeMessage($array, 0, strlen($array), false);
         }
@@ -1826,8 +1825,6 @@ class WhatsProt
         }
         $url = rtrim($url, '&');
 
-        $hashData = getBuildHash();
-
         // Open connection.
         $ch = curl_init();
 
@@ -1835,7 +1832,7 @@ class WhatsProt
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_USERAGENT, $hashData->UserAgent);
+        curl_setopt($ch, CURLOPT_USERAGENT, $this->buildHash->UserAgent);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: text/json'));
         // This makes CURL accept any peer!
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
