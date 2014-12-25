@@ -84,7 +84,8 @@ class WhatsMediaUploader
         $POST = "POST " . $url . "\r\n";
         $POST .= "Content-Type: multipart/form-data; boundary=" . $boundary . "\r\n";
         $POST .= "Host: " . $host . "\r\n";
-        $POST .= "User-Agent: " . WhatsProt::WHATSAPP_USER_AGENT . "\r\n";
+        $hashData = getBuildHash();
+        $POST .= "User-Agent: " . $hashData['useragent'] . "\r\n";
         $POST .= "Content-Length: " . $contentlength . "\r\n\r\n";
 
         return self::sendData($host, $POST, $hBAOS, $filepath, $mediafile, $fBAOS);

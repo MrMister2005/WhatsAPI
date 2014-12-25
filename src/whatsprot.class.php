@@ -507,9 +507,11 @@ class WhatsProt
      *
      * Approx 20 (unverified) is the maximum number of targets
      *
-     * @param  array  $targets       An array of numbers to send to.
-     * @param  string  $path          URL or local path to the audio file to send
+     * @param  array $targets       An array of numbers to send to.
+     * @param  string $path          URL or local path to the audio file to send
      * @param  bool $storeURLmedia Keep a copy of the audio file on your server
+     * @param int $fsize
+     * @param string $fhash
      */
     public function sendBroadcastAudio($targets, $path, $storeURLmedia = false, $fsize = 0, $fhash = "")
     {
@@ -1476,7 +1478,8 @@ class WhatsProt
             $this->reader->setKey($this->inputKey);
             //$this->writer->setKey($this->outputKey);
             $phone = $this->dissectPhone();
-            $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData . time() . static::WHATSAPP_USER_AGENT . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . "001";
+            $hashData = getBuildHash();
+            $array = "\0\0\0\0" . $this->phoneNumber . $this->challengeData . time() . $hashData['useragent'] . " MccMnc/" . str_pad($phone["mcc"], 3, "0", STR_PAD_LEFT) . "001";
             $this->challengeData = null;
             return $this->outputKey->EncodeMessage($array, 0, strlen($array), false);
         }
