@@ -47,7 +47,6 @@ class WhatsProt
     const WHATSAPP_UPLOAD_HOST = 'https://mms.whatsapp.net/client/iphone/upload.php'; // The upload host.
     const WHATSAPP_DEVICE = 'Android';                      // The device name.
     const WHATSAPP_VER = '2.11.301';                // The WhatsApp version.
-    const WHATSAPP_USER_AGENT = 'WhatsApp/2.11.301 Android/4.3 Device/GalaxyS3';// User agent used in request/registration code.
 
     /**
      * Property declarations.
@@ -300,7 +299,7 @@ class WhatsProt
         }
 
         // Build the token.
-        $token = generateRequestToken($phone['country'], $phone['phone']);
+        $tokenData = generateRequestToken($phone['country'], $phone['phone']);
 
         // Build the url.
         $host = 'https://' . static::WHATSAPP_REQUEST_HOST;
@@ -313,7 +312,7 @@ class WhatsProt
             'method' => $method,
             'mcc' => $phone['mcc'],
             'mnc' => '001',
-            'token' => urlencode($token),
+            'token' => urlencode($tokenData['token']),
             'id' => $this->identity,
         );
 
@@ -1818,6 +1817,8 @@ class WhatsProt
         }
         $url = rtrim($url, '&');
 
+        $hashData = getBuildHash();
+
         // Open connection.
         $ch = curl_init();
 
@@ -1825,7 +1826,7 @@ class WhatsProt
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, 0);
-        curl_setopt($ch, CURLOPT_USERAGENT, static::WHATSAPP_USER_AGENT);
+        curl_setopt($ch, CURLOPT_USERAGENT, $hashData['useragent']);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: text/json'));
         // This makes CURL accept any peer!
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
